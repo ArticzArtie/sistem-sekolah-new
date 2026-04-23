@@ -57,4 +57,42 @@ class Student extends Database
             die('Error to store students : ' . $stmt->error);
         }
     }
+
+
+    //Fungsi mengupdata data siswa
+    public function update(array $data, int $id)
+    {
+        $nis = htmlspecialchars($data['nis']);
+        $name = htmlspecialchars($data['name']);
+        $class = htmlspecialchars($data['class']);
+        $phoneNumber = htmlspecialchars($data['phone_number']);
+
+        $query = "UPDATE {$this->table} SET name = ?, nis = ?, class = ?, phone_number = ? WHERE id = ?" ;
+        $stmt = $this->connection->prepare($query);
+        $stmt->bind_param("ssssi", $name, $nis, $class, $phoneNumber, $id);
+        $stmt->execute();
+
+        if ($stmt->affected_rows > 0) {
+            header('Location: /students');
+            exit();
+        } else {
+            die('Error to update students : ' . $stmt->error);
+        }
+    }
+
+    //Fungsi untuk delete siswa
+    public function delete(int $id)
+    {
+        $query = "DELETE FROM  {$this->table}  WHERE id = ?" ;
+        $stmt = $this->connection->prepare($query);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+
+        if ($stmt->affected_rows > 0) {
+            header('Location: /students');
+            exit();
+        } else {
+            die('Error to delete students : ' . $stmt->error);
+        }
+    }
 }
